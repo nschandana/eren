@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Forecast App</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Weather Forecast App</h1>
+    <input type="text" id="cityInput" placeholder="Enter city name">
+    <button onclick="getWeather()">Get Weather</button>
+    <div class="currentWeather">
+      <!-- Display current weather data here -->
+    </div>
+    <div class="chartContainer">
+      <canvas id="temperatureChart"></canvas>
+      <canvas id="humidityChart"></canvas>
+      <canvas id="weatherConditionChart"></canvas>
+    </div>
+  </div>
+  <script>
+    // CSS styles
+    const styles = `
+      /* Styles for the Weather Forecast App */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      input {
+        padding: 8px;
+        font-size: 16px;
+        width: 60%;
+      }
+      button {
+        padding: 8px 15px;
+        font-size: 16px;
+      }
+      .currentWeather {
+        margin-top: 20px;
+      }
+      .chartContainer {
+        margin-top: 40px;
+      }
+    `;
+
+    // JavaScript code
+    const script = `
+      const apiUrl = 'http://localhost:3000/weather/';
+
+      async function getWeather() {
+        const cityInput = document.getElementById('cityInput').value.trim();
+        const response = await fetch(apiUrl + cityInput);
+        const data = await response.json();
+        displayCurrentWeather(data);
+        displayWeatherCharts(data);
+      }
+
+      function displayCurrentWeather(data) {
+        const currentWeatherDiv = document.querySelector('.currentWeather');
+        const currentWeatherData = data.list[0];
+        const { main, weather } = currentWeatherData;
+        const date = new Date(currentWeatherData.dt * 1000).toDateString();
+
+        const weatherHtml = `
+          <h2>\${data.city.name} (\${date})</h2>
+          <p>Weather Condition: \${weather[0].description}</p>
+          <p>Temperature: \${main.temp} °C</p>
+          <p>Humidity: \${main.humidity}%</p>
+          <p>Wind Speed: \${currentWeatherData.speed} m/s</p>
+        `;
+
+        currentWeatherDiv.innerHTML = weatherHtml;
+      }
+
+      function displayWeatherCharts(data) {
+        const temperatureChartCanvas = document.getElementById('temperatureChart');
+        const humidityChartCanvas = document.getElementById('humidityChart');
+        const weatherConditionChartCanvas = document.getElementById('weatherConditionChart');
+
+        // Chart.js and other JS libraries can be loaded here
+
+        // ... Chart.js and other charting library initialization and chart creation code ...
+      }
+
+      // Fetch weather data for default city (Delhi) on page load
+      getWeather();
+    `;
+
+    // Combine CSS and JavaScript code
+    const combinedScript = styles + script;
+
+    // Inject the combined code into the document
+    const scriptElement = document.createElement('script');
+    scriptElement.innerHTML = combinedScript;
+    document.body.appendChild(scriptElement);
+  </script>
+</body>
+</html>
